@@ -1,0 +1,41 @@
+<div class="jumbotron">
+  <h1>'Allo, 'Allo!</h1>
+  <p class="lead">
+    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
+    Always a pleasure scaffolding your apps.
+  </p>
+  <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
+</div>
+
+<input class="btn btn-info" ng-show="!logeado" value="Login" ng-click="showLoginModal()"></input>
+
+
+<div id="loginModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Login</h4>
+            </div>
+
+            <h4 style="color:#ff6666" ng-repeat="error in erroresLogin">{{error}}</h4>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input id="email" type="text" class="form-control input-sm" ng-model="email"/>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input id="password" ng-model="password" type="Password" class="form-control input-sm"/>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-info" value="Login" ng-click="login()">
+            </div>
+        </div>
+    </div>
+</div>
