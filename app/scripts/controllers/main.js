@@ -13,7 +13,9 @@ angular.module('parcial1App')
 
     $scope.email = "";
     $scope.password = "";
+    $scope.passwordConfirmation = "";
     $scope.erroresLogin = [];
+    $scope.erroresRegistro = [];
 
     $scope.client="";
     $scope.access_token="";
@@ -31,21 +33,35 @@ angular.module('parcial1App')
                 console.log(response.headers('access-token'));
                 console.log(response.headers('client'));
                 $("#loginModal").modal("hide");
-                //$("#login_button").modal("hide");
-                $scope.client="";
-                $scope.access_token="";
                 $scope.logeado = true;
                 console.log($scope.logeado);
             });
         }
     }
 
-    $scope.showLoginModal = function(){
-        $("#loginModal").modal("show");
+    $scope.registrar = function(){
+        if($scope.procedToRegistro()){
+            $http.post('http://localhost:3000/auth', {
+                email:$scope.email,
+                password:$scope.password,
+                password_confirmation:$scope.password_confirmation
+            }).then(function (response) {
+                $scope.client = response.headers('client');
+                $scope.access_token = response.headers('access-token');
+                console.log(response.headers('access-token'));
+                console.log(response.headers('client'));
+                $("#registrationModal").modal("hide");
+                //$("#login_button").modal("hide");
+                $scope.logeado = true;
+                console.log($scope.logeado);
+                $scope.email = "";
+                $scope.password = "";
+                $scope.passwordConfirmation = "";
+            });
+        }
     }
 
     $scope.procedToLogin = function(){
-
         $scope.erroresLogin.length = 0;
         $scope.erroresLogin = [];
 
@@ -62,5 +78,51 @@ angular.module('parcial1App')
             return false;
         }
     }
+
+    $scope.procedToRegistro = function(){
+        $scope.erroresRegistro.length = 0;
+        $scope.erroresRegistro = [];
+
+        if($scope.email==""){
+            $scope.erroresRegistro.push("El email no puede estar vacio");
+        }
+        if($scope.password==""){
+            $scope.erroresRegistro.push("El password no puede estar vacio");
+        }
+        if($scope.password.length<6){
+            $scope.erroresRegistro.push("El password debe tener al menos 6 caracteres");
+        }
+        if($scope.password==""){
+            $scope.erroresRegistro.push("La confirmación de password no puede estar vacia");
+        }
+        if($scope.passwordConfirmation!=$scope.password){
+            $scope.erroresRegistro.push("Los passwords no coinciden");
+        }
+
+        if($scope.email!="" && $scope.password!="" && $scope.passwordConfirmation!="" && $scope.passwordConfirmation==$scope.password && $scope.password.length>=6 && $scope.passwordConfirmation.length>=6){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /*
+    * Show modals methods
+    */
+
+    $scope.showRegisterModal = function(){
+        $("#registrationModal").modal("show");
+    }
+
+    $scope.showLoginModal = function(){
+        $("#loginModal").modal("show");
+    }
+    
+    /*$interval(function(){
+        navigator.geolocation.getCurrentPosition(function(position){
+            console.log(position);
+        });
+    },5000)*/
+
 
 });
