@@ -1,26 +1,21 @@
-<script type="text/javascript" src="datamaps.world.min.js"></script>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-
 <div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
+  <ui-gmap-google-map refresh="true" center="bachesMapa.center" zoom="8">
+    <ui-gmap-marker ng-repeat="m in mapBump" coords="m.coords" idkey="m.id" click="onClick(m.id)"></ui-gmap-marker>
+  </ui-gmap-google-map >
 </div>
-
-<script src="/datamaps.world.min.js"></script>
-<div id="container" style="position: relative; width: 500px; height: 300px;"></div>
-<script>
-    var map = new Datamap({element: document.getElementById('container')});
-</script>
 
 
 
 <input class="btn btn-info" ng-show="!logeado" value="Registrarse" ng-click="showRegisterModal()"></input>
 <input class="btn btn-info" ng-show="!logeado" value="Login" ng-click="showLoginModal()"></input>
-<input class="btn btn-info" ng-show="logeado" value="Ver baches" ng-click="showBumps()"></input>
+
+
+<div id="bachesModal" class="modal fade">
+  <div class="baches-dialog">
+    <div class="baches-content">
+    </div>
+  </div>
+</div>
 
 
 

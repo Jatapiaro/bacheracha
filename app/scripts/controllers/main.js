@@ -10,6 +10,20 @@
 angular.module('parcial1App')
   .controller('MainCtrl', function ($scope,$http,$interval,$window) {
 
+    $scope.latitudeInicial;
+    $scope.longitudeInicial;
+
+    /*
+    * Variables de mapas
+    */
+    $scope.bachesMapa = {
+        center: {
+            latitude: 19.4326077,
+            longitude: -99.13320799999997,
+        }, 
+        zoom: 8
+    };
+
     /*
     * Variables de inicio de sesión
     */
@@ -18,6 +32,9 @@ angular.module('parcial1App')
     $scope.passwordConfirmation = "";
     $scope.erroresLogin = [];
     $scope.erroresRegistro = [];
+
+    $scope.bumps = [];
+    $scope.mapBump = [];
 
 
     /*
@@ -46,11 +63,9 @@ angular.module('parcial1App')
             }).then(function (response) {
                 $scope.client = response.headers('client');
                 $scope.access_token = response.headers('access-token');
-                console.log(response.headers('access-token'));
-                console.log(response.headers('client'));
                 $("#loginModal").modal("hide");
                 $scope.logeado = true;
-                console.log($scope.logeado);
+                $scope.showBumps();
             });
         }
     }
@@ -95,6 +110,7 @@ angular.module('parcial1App')
     }
 
     $scope.showBumps = function(){
+
         var req = {
           method: 'GET',
           url: 'http://localhost:3000/bumps.json',
@@ -108,11 +124,26 @@ angular.module('parcial1App')
         }
 
         $http(req).then(function(res){
-            console.log('aqui estoy');
-            var data = res.data;
-            /*for (var i = 0; i < data.length; i++) {
-                console.log(data[i].id);
-            }*/
+            console.log(res.data);
+            $scope.bumps = res.data;
+            for (var i = 0; i < $scope.bumps.length; i++) {
+                var c = {
+                    latitude: $scope.bumps[i].latitude,
+                    longitude: $scope.bumps[i].longitude,
+                }
+
+                var b = {
+                    coords : c,
+                    id : $scope.bumps[i].id
+                    /*icon: {
+                        url: "http://2.bp.blogspot.com/-EJ2Ymjgi2Uc/UsG46bKdUmI/AAAAAAAAIZ8/z-GNZkSA1ys/s1600/Bumpyroad.png",
+                        scaledSize: 0.5
+                    }*/
+                }
+                console.log(b);
+
+                $scope.mapBump.push(b);
+            }
         });
     }
 
@@ -154,6 +185,15 @@ angular.module('parcial1App')
     $scope.showLoginModal = function(){
         $("#loginModal").modal("show");
     }
+
+    $scope.showBachesModal = function(){
+        $("#bachesModal").modal("show");
+    }
+
+    $scope.onClick = function(id){
+        console.log("El id: "+id);
+    }
+
 
 
     
