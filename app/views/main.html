@@ -1,3 +1,6 @@
+<script type="text/javascript" src="datamaps.world.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
 <div class="jumbotron">
   <h1>'Allo, 'Allo!</h1>
   <p class="lead">
@@ -7,8 +10,19 @@
   <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
 </div>
 
+<script src="/datamaps.world.min.js"></script>
+<div id="container" style="position: relative; width: 500px; height: 300px;"></div>
+<script>
+    var map = new Datamap({element: document.getElementById('container')});
+</script>
+
+
+
 <input class="btn btn-info" ng-show="!logeado" value="Registrarse" ng-click="showRegisterModal()"></input>
 <input class="btn btn-info" ng-show="!logeado" value="Login" ng-click="showLoginModal()"></input>
+<input class="btn btn-info" ng-show="logeado" value="Ver baches" ng-click="showBumps()"></input>
+
+
 
 
 <div id="loginModal" class="modal fade">
@@ -41,6 +55,41 @@
     </div>
 </div>
 
+
+<div id="registrationModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Registro</h4>
+            </div>
+
+            <h4 style="color:#ff6666" ng-repeat="error in erroresRegistro">{{error}}</h4>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input id="email" type="text" class="form-control input-sm" ng-model="email"/>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input id="password" ng-model="password" type="Password" class="form-control input-sm"/>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="password-confirmation">Password:</label>
+                <input id="password-confirmation" ng-model="passwordConfirmation" type="Password" class="form-control input-sm"/>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-info" value="Registrarse" ng-click="registrar()">
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="registrationModal" class="modal fade">
     <div class="modal-dialog">

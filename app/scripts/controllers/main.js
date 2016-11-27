@@ -10,16 +10,32 @@
 angular.module('parcial1App')
   .controller('MainCtrl', function ($scope,$http,$interval,$window) {
 
-
-    $scope.email = "";
-    $scope.password = "";
+    /*
+    * Variables de inicio de sesión
+    */
+    $scope.email = "jacobo@gmail.com";
+    $scope.password = "jacobojacobo";
     $scope.passwordConfirmation = "";
     $scope.erroresLogin = [];
     $scope.erroresRegistro = [];
 
+
+    /*
+    * Variables de token
+    */
     $scope.client="";
     $scope.access_token="";
     $scope.logeado=false;
+
+    /*
+    *Variables de registro baches
+    */
+    /*$scope.latitude;
+    $scope.longitude;
+    $scope.widthSteps;
+    $scope.lengthSteps;
+    $scope.depth;
+    $scope.volumen;*/
 
 
     $scope.login = function(){
@@ -54,7 +70,6 @@ angular.module('parcial1App')
                 //$("#login_button").modal("hide");
                 $scope.logeado = true;
                 console.log($scope.logeado);
-                $scope.email = "";
                 $scope.password = "";
                 $scope.passwordConfirmation = "";
             });
@@ -77,6 +92,28 @@ angular.module('parcial1App')
         }else{
             return false;
         }
+    }
+
+    $scope.showBumps = function(){
+        var req = {
+          method: 'GET',
+          url: 'http://localhost:3000/bumps.json',
+          headers: {
+            'access-token':$scope.access_token,
+            'uid':$scope.email,
+            'client':$scope.client,
+            'token-type':"Bearer",
+            'Content-Type':'application/json'
+          }
+        }
+
+        $http(req).then(function(res){
+            console.log('aqui estoy');
+            var data = res.data;
+            /*for (var i = 0; i < data.length; i++) {
+                console.log(data[i].id);
+            }*/
+        });
     }
 
     $scope.procedToRegistro = function(){
@@ -117,12 +154,14 @@ angular.module('parcial1App')
     $scope.showLoginModal = function(){
         $("#loginModal").modal("show");
     }
+
+
     
     /*$interval(function(){
         navigator.geolocation.getCurrentPosition(function(position){
             console.log(position);
         });
-    },5000)*/
+    },15000)*/
 
 
 });
