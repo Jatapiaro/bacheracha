@@ -1,7 +1,7 @@
 <div class="jumbotron">
   <ui-gmap-google-map refresh="true" center="bachesMapa.center" zoom="8">
     <!--<ui-gmap-circle visible='true' clickable='true' radius='1' ng-repeat="m in mapBump track by m.id" center="m.coords" click="onClick(m.id)"></ui-gmap-marker>-->
-    <ui-gmap-marker ng-repeat="m in mapBump" coords="m.coords" idkey="m.id" click="onClick(m.id)">
+    <ui-gmap-marker ng-repeat="m in mapBump" coords="m.coords" idkey="m.id" click="searchBump(m.id)">
     
       
     </ui-gmap-marker>
@@ -14,17 +14,6 @@
 <input class="btn btn-info" ng-show="!logeado" value="Login" ng-click="showLoginModal()"></input>
 
 <input class="btn btn-info" ng-show="logeado" value="Registra un bache" ng-click="showNewBacheModal()"></input>
-
-
-<div id="bachesModal" class="modal fade">
-  <div class="baches-dialog">
-    <div class="baches-content">
-    </div>
-  </div>
-</div>
-
-
-
 
 <div id="loginModal" class="modal fade">
     <div class="modal-dialog">
@@ -135,19 +124,24 @@
                 <h4 class="modal-title">Nuevo bache</h4>
             </div>
 
-            <h4 style="color:#ff6666" ng-repeat="error in erroresBache">{{error}}</h4>
+            <div class="modal-body">
+              <div class="form-group">
+                <h4 style="color:#ff6666" ng-repeat="error in erroresBache">{{error}}</h4>
+              </div>
+            </div>
 
+          
             <div class="modal-body">
               <div class="form-group">
                 <label for="lengthSteps">¿Cúantos pasos tiene de largo el bache?:</label>
-                <input id="lengthSteps" min="1" max="30" type="number" class="form-control input-sm" ng-model="lengthSteps" />
+                <input id="lengthSteps" ng-change="calcular()" min="1" max="30" type="number" class="form-control input-sm" ng-model="lengthSteps" />
               </div>
             </div>
 
             <div class="modal-body">
               <div class="form-group">
                 <label for="widthSteps">¿Cúantos pasos tiene de ancho el bache?:</label>
-                <input id="widthSteps" min="1" max="30" type="number" class="form-control input-sm" ng-model="widthSteps"/>
+                <input id="widthSteps" ng-change="calcular()" min="1" max="30" type="number" class="form-control input-sm" ng-model="widthSteps"/>
               </div>
             </div>
 
@@ -155,7 +149,7 @@
               <div class="form-group">
                 <label for="depth">¿Cuál es la profundidad del bache?:(cm)
                 </label>
-                <input id="depth" min="1" max="100" type="number" class="form-control input-sm" ng-model="depth"/>
+                <input id="depth" ng-change="calcular()" min="1" max="100" type="number" class="form-control input-sm" ng-model="depth"/>
               </div>
             </div>
 
@@ -167,7 +161,27 @@
               </div>
             </div>
 
+            <div class="modal-body">
+              <div class="form-group">
+                <label>Kg de asfalto necesarios: {{kg}} kg 
+                </label>
+              </div>
             </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label>Número de costales: {{costales}}  
+                </label>
+              </div>
+            </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label>Precio: ${{price}}  
+                </label>
+              </div>
+            </div>
+
             <div class="modal-footer">
                 <input class="btn btn-info" value="Registrar bache" ng-click="registrarBache()">
             </div>

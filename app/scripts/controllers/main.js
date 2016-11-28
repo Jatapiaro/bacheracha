@@ -29,7 +29,7 @@ angular.module('parcial1App')
     */
     $scope.email = "jacobo@gmail.com";
     $scope.password = "jacobojacobo";
-    $scope.passwordConfirmation = "";
+    $scope.passwordConfirmation = "jacobojacobo";
     $scope.erroresLogin = [];
     $scope.erroresRegistro = [];
 
@@ -57,6 +57,11 @@ angular.module('parcial1App')
     $scope.volumen=0;
     $scope.costales=0;
 
+    /*
+    *Show bache
+    */
+    $scope.bache;
+
 
     $scope.login = function(){
         if($scope.procedToLogin()){
@@ -66,6 +71,8 @@ angular.module('parcial1App')
             }).then(function (response) {
                 $scope.client = response.headers('client');
                 $scope.access_token = response.headers('access-token');
+                console.log(response.headers('access-token'));
+                console.log(response.headers('client'));
                 $("#loginModal").modal("hide");
                 $scope.logeado = true;
                 $scope.showBumps();
@@ -153,31 +160,33 @@ angular.module('parcial1App')
     $scope.registrarBache = function(){
         if($scope.procedToBacheCreate()){
             var req = {
-              method: 'GET',
-              url: 'http://localhost:3000/bumps.json',
-              headers: {
-                'access-token':$scope.access_token,
-                'uid':$scope.email,
-                'client':$scope.client,
-                'token-type':"Bearer",
-                'Content-Type':'application/json'
-              },
-              body:{
+                method: 'POST',
+                url: 'http://localhost:3000/bumps.json',
+                headers: {
+                    'access-token':$scope.access_token,
+                    'uid':$scope.email,
+                    'client':$scope.client,
+                    'token-type':"Bearer",
+                    'Content-Type':'application/json'
+                },
+                data:{
                     "latitude":$scope.latitude,
                     "longitude":$scope.longitude,
                     "widthSteps":$scope.widthSteps,
                     "lengthSteps":$scope.lengthSteps,
                     "depth":$scope.depth,
                     "videoUrl":$scope.url,
-                    "price":231,
+                    "price":$scope.price,
                     "completed":false,
-                    "kg":123123,
-                    "costales":1244
+                    "kg":$scope.kg,
+                    "costales":$scope.costales
                 }
             }
         }
         $http(req).then(function(res){
             console.log(res.data);
+            $("#newBacheModal").modal("hide");
+            $scope.showBumps();
         });
     }
 
@@ -226,8 +235,13 @@ angular.module('parcial1App')
         }
     }
 
-    $scope.onClick = function(id){
-        console.log("El id: "+id);
+    $scope.searchBump = function(id){
+        for(var i = 0; i < $scope.bumps.length; i++) {
+            var b = $scope.bumps[i];
+            if(b.id==id){
+                $scope.bump = b;
+            }
+        }
     }
 
     /*
@@ -249,11 +263,30 @@ angular.module('parcial1App')
     $scope.showNewBacheModal = function(){
         $scope.latitude = -1;
         $scope.longitude = -1;
+        $scope.calcular();
         navigator.geolocation.getCurrentPosition(function(position){
             $scope.latitude = position.coords.latitude;
             $scope.longitude = position.coords.longitude;
         });
         $("#newBacheModal").modal("show");
+    }
+
+    /*
+    * Calculos
+    */
+    $scope.calcular = function(){
+        console.log("Estoy calculando perro");
+        var lengthCm = $scope.lengthSteps*30;
+        var widthCm = $scope.widthSteps*30;
+        var depthCm = $scope.depth;
+
+        var vol = lengthCm*widthCm*depthCm;
+
+        $scope.kg = vol/6000;
+
+        $scope.costales = Math.ceil($scope.kg/15);
+
+        $scope.price = $scope.costales*192;
     }
 
     
