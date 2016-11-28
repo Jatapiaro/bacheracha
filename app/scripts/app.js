@@ -16,7 +16,14 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'uiGmapgoogle-maps'
+    'uiGmapgoogle-maps',
+    'youtube-embed'
+    /*"com.2fdevs.videogular",
+    "com.2fdevs.videogular.plugins.controls",
+    "com.2fdevs.videogular.plugins.overlayplay",
+    "com.2fdevs.videogular.plugins.poster",
+    "info.vietnamcode.nampnq.videogular.plugins.youtube",*/
+
   ])
 
   .config(function ($routeProvider,$httpProvider) {

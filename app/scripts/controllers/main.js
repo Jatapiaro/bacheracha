@@ -8,10 +8,28 @@
  * Controller of the parcial1App
  */
 angular.module('parcial1App')
-  .controller('MainCtrl', function ($scope,$http,$interval,$window) {
+  .controller('MainCtrl', function ($scope,$sce,$http,$interval,$window) {
+
+
+    $scope.videoList = [];
+    $scope.videoIndex = -1;
+
+    $scope.mockVideo = 'biZLZZFb468';
+    $scope.dynamic = {
+        video: $scope.mockVideo,
+        change: function () {
+            if ($scope.videoIndex == -1) {
+                $scope.dynamic.video = $scope.mockVideo;
+            } else {
+                $scope.dynamic.video = $scope.videoList[$scope.videoIndex];
+            }
+        }
+    };
 
     $scope.latitudeInicial;
     $scope.longitudeInicial;
+
+    $scope.url = '';
 
     /*
     * Variables de mapas
@@ -159,6 +177,7 @@ angular.module('parcial1App')
 
     $scope.registrarBache = function(){
         if($scope.procedToBacheCreate()){
+            $scope.videoUrl = $scope.videoUrl.replace("https://www.youtube.com/watch?v=", ""); 
             var req = {
                 method: 'POST',
                 url: 'http://localhost:3000/bumps.json',
@@ -175,7 +194,7 @@ angular.module('parcial1App')
                     "widthSteps":$scope.widthSteps,
                     "lengthSteps":$scope.lengthSteps,
                     "depth":$scope.depth,
-                    "videoUrl":$scope.url,
+                    "videoUrl":$scope.videoUrl,
                     "price":$scope.price,
                     "completed":false,
                     "kg":$scope.kg,
@@ -238,10 +257,16 @@ angular.module('parcial1App')
     $scope.searchBump = function(id){
         for(var i = 0; i < $scope.bumps.length; i++) {
             var b = $scope.bumps[i];
+            $scope.videoList.push(b.videoUrl);
+            $scope.videoIndex = i;
             if(b.id==id){
-                $scope.bump = b;
+                $scope.bache = b;
+                console.log(b.videoUrl);
+                $scope.url = b.videoUrl;
+                break;
             }
         }
+        $scope.showBachesViewModal();
     }
 
     /*
@@ -258,6 +283,11 @@ angular.module('parcial1App')
 
     $scope.showBachesModal = function(){
         $("#bachesModal").modal("show");
+    }
+
+    $scope.showBachesViewModal = function(){
+        $scope.dynamic.change();
+        $("#viewBacheModal").modal("show");
     }
 
     $scope.showNewBacheModal = function(){
@@ -287,6 +317,14 @@ angular.module('parcial1App')
         $scope.costales = Math.ceil($scope.kg/15);
 
         $scope.price = $scope.costales*192;
+    }
+
+    $scope.prueba = function(id){
+        if(id==$scope.bache.id){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     

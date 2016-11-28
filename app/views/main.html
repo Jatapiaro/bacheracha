@@ -3,10 +3,13 @@
     <!--<ui-gmap-circle visible='true' clickable='true' radius='1' ng-repeat="m in mapBump track by m.id" center="m.coords" click="onClick(m.id)"></ui-gmap-marker>-->
     <ui-gmap-marker ng-repeat="m in mapBump" coords="m.coords" idkey="m.id" click="searchBump(m.id)">
     
-      
     </ui-gmap-marker>
-  </ui-gmap-circle >
+  </ui-gmap-google-map>
+  
 </div>
+
+
+
 
 
 
@@ -14,6 +17,8 @@
 <input class="btn btn-info" ng-show="!logeado" value="Login" ng-click="showLoginModal()"></input>
 
 <input class="btn btn-info" ng-show="logeado" value="Registra un bache" ng-click="showNewBacheModal()"></input>
+
+
 
 <div id="loginModal" class="modal fade">
     <div class="modal-dialog">
@@ -184,6 +189,21 @@
 
             <div class="modal-footer">
                 <input class="btn btn-info" value="Registrar bache" ng-click="registrarBache()">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="viewBacheModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Ver bache: {{bache.videoUrl}}</h4>
+            </div>
+            <div class="embed-responsive embed-responsive-16by9">
+            <youtube-video class="embed-responsive-item" video-id="dynamic.video"></youtube-video>
             </div>
         </div>
     </div>
