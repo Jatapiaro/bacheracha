@@ -13,6 +13,8 @@
 <input class="btn btn-info" ng-show="!logeado" value="Registrarse" ng-click="showRegisterModal()"></input>
 <input class="btn btn-info" ng-show="!logeado" value="Login" ng-click="showLoginModal()"></input>
 
+<input class="btn btn-info" ng-show="logeado" value="Registra un bache" ng-click="showNewBacheModal()"></input>
+
 
 <div id="bachesModal" class="modal fade">
   <div class="baches-dialog">
@@ -120,6 +122,54 @@
             </div>
             <div class="modal-footer">
                 <input class="btn btn-info" value="Registrarse" ng-click="registrar()">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="newBacheModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Nuevo bache</h4>
+            </div>
+
+            <h4 style="color:#ff6666" ng-repeat="error in erroresBache">{{error}}</h4>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="lengthSteps">¿Cúantos pasos tiene de largo el bache?:</label>
+                <input id="lengthSteps" min="1" max="30" type="number" class="form-control input-sm" ng-model="lengthSteps" />
+              </div>
+            </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="widthSteps">¿Cúantos pasos tiene de ancho el bache?:</label>
+                <input id="widthSteps" min="1" max="30" type="number" class="form-control input-sm" ng-model="widthSteps"/>
+              </div>
+            </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="depth">¿Cuál es la profundidad del bache?:(cm)
+                </label>
+                <input id="depth" min="1" max="100" type="number" class="form-control input-sm" ng-model="depth"/>
+              </div>
+            </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="url">URL de tu video:  
+                </label>
+                <input id="url" type="text" class="form-control input-sm" ng-model="videoUrl"/>
+              </div>
+            </div>
+
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-info" value="Registrar bache" ng-click="registrarBache()">
             </div>
         </div>
     </div>

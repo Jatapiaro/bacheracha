@@ -47,12 +47,15 @@ angular.module('parcial1App')
     /*
     *Variables de registro baches
     */
-    /*$scope.latitude;
-    $scope.longitude;
-    $scope.widthSteps;
-    $scope.lengthSteps;
-    $scope.depth;
-    $scope.volumen;*/
+    $scope.erroresBache=[];
+    $scope.latitude=-1;
+    $scope.longitude=-1;
+    $scope.widthSteps=1;
+    $scope.lengthSteps=1;
+    $scope.depth=1;
+    $scope.videoUrl="";
+    $scope.volumen=0;
+    $scope.costales=0;
 
 
     $scope.login = function(){
@@ -147,6 +150,10 @@ angular.module('parcial1App')
         });
     }
 
+    $scope.registrarBache = function(){
+        $scope.procedToBacheCreate();
+    }
+
     $scope.procedToRegistro = function(){
         $scope.erroresRegistro.length = 0;
         $scope.erroresRegistro = [];
@@ -174,6 +181,28 @@ angular.module('parcial1App')
         }
     }
 
+    $scope.procedToBacheCreate = function(){
+        $scope.erroresBache.length = 0;
+        $scope.erroresRegistro = [];
+
+        if($scope.latitude==-1 || $scope.longitude==-1){
+            $scope.erroresBache.push("Espera a que obtengamos tu ubicación");
+        }
+        if($scope.videoUrl==""){
+            $scope.erroresBache.push("Agrega la URL del video");
+        }
+
+        if($scope.erroresBache.length==0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    $scope.onClick = function(id){
+        console.log("El id: "+id);
+    }
+
     /*
     * Show modals methods
     */
@@ -190,11 +219,15 @@ angular.module('parcial1App')
         $("#bachesModal").modal("show");
     }
 
-    $scope.onClick = function(id){
-        console.log("El id: "+id);
+    $scope.showNewBacheModal = function(){
+        $scope.latitude = -1;
+        $scope.longitude = -1;
+        navigator.geolocation.getCurrentPosition(function(position){
+            $scope.latitude = position.coords.latitude;
+            $scope.longitude = position.coords.longitude;
+        });
+        $("#newBacheModal").modal("show");
     }
-
-
 
     
     /*$interval(function(){
