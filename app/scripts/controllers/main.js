@@ -151,7 +151,34 @@ angular.module('parcial1App')
     }
 
     $scope.registrarBache = function(){
-        $scope.procedToBacheCreate();
+        if($scope.procedToBacheCreate()){
+            var req = {
+              method: 'GET',
+              url: 'http://localhost:3000/bumps.json',
+              headers: {
+                'access-token':$scope.access_token,
+                'uid':$scope.email,
+                'client':$scope.client,
+                'token-type':"Bearer",
+                'Content-Type':'application/json'
+              },
+              body:{
+                    "latitude":$scope.latitude,
+                    "longitude":$scope.longitude,
+                    "widthSteps":$scope.widthSteps,
+                    "lengthSteps":$scope.lengthSteps,
+                    "depth":$scope.depth,
+                    "videoUrl":$scope.url,
+                    "price":231,
+                    "completed":false,
+                    "kg":123123,
+                    "costales":1244
+                }
+            }
+        }
+        $http(req).then(function(res){
+            console.log(res.data);
+        });
     }
 
     $scope.procedToRegistro = function(){
