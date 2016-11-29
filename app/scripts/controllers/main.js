@@ -11,6 +11,13 @@ angular.module('parcial1App')
   .controller('MainCtrl', function ($scope,$sce,$http,$interval,$window) {
 
 
+    $scope.money=1;
+    $scope.meta=1;
+    $scope.moco = 1;
+    $scope.comentario="Sin comentario";
+
+    $scope.coperadores="";
+
     $scope.videoList = [];
     $scope.videoIndex = -1;
 
@@ -90,8 +97,8 @@ angular.module('parcial1App')
             }).then(function (response) {
                 $scope.client = response.headers('client');
                 $scope.access_token = response.headers('access-token');
-                console.log(response.headers('access-token'));
-                console.log(response.headers('client'));
+                console.log("tkn: "+response.headers('access-token'));
+                console.log("cl: "+response.headers('client'));
                 $("#loginModal").modal("hide");
                 $scope.logeado = true;
                 $scope.showBumps();
@@ -108,8 +115,8 @@ angular.module('parcial1App')
             }).then(function (response) {
                 $scope.client = response.headers('client');
                 $scope.access_token = response.headers('access-token');
-                console.log(response.headers('access-token'));
-                console.log(response.headers('client'));
+                console.log("tkn: "+response.headers('access-token'));
+                console.log("cl: "+response.headers('client'));
                 $("#registrationModal").modal("hide");
                 //$("#login_button").modal("hide");
                 $scope.logeado = true;
@@ -169,12 +176,7 @@ angular.module('parcial1App')
                 var b = {
                     coords : c,
                     id : $scope.bumps[i].id
-                    /*icon: {
-                        url: "http://2.bp.blogspot.com/-EJ2Ymjgi2Uc/UsG46bKdUmI/AAAAAAAAIZ8/z-GNZkSA1ys/s1600/Bumpyroad.png",
-                        scaledSize: 0.5
-                    }*/
                 }
-                console.log(b);
 
                 $scope.mapBump.push(b);
             }
@@ -213,6 +215,60 @@ angular.module('parcial1App')
             $("#newBacheModal").modal("hide");
             $scope.showBumps();
         });
+    }
+
+
+    $scope.registrarCoperacha = function(){
+            var req = {
+                method: 'POST',
+                url: 'http://localhost:3000/bumps/'+$scope.bache.id+'/donatives.json',
+                headers: {
+                    'access-token':$scope.access_token,
+                    'uid':$scope.email,
+                    'client':$scope.client,
+                    'token-type':"Bearer",
+                    'Content-Type':'application/json'
+                },
+                data:{
+                    "money":$scope.money,
+                    "comment":$scope.comment
+                }
+            }
+        $http(req).then(function(res){
+            console.log(res.data);
+        });
+
+        var l = 0;
+        for (var i = 0; i < $scope.bache.donatives.length; i++) {
+            l+=$scope.bache.donatives[i].money;
+        }
+        if(l+$scope.money>=$scope.bache.price){
+            $scope.modificarBache2();
+        }
+        $("#payModal").modal("hide");
+    }
+
+    $scope.modificarBache2 = function(){
+            var req = {
+                method: 'PUT',
+                url: 'http://localhost:3000/bumps/'+$scope.bache.id+'.json',
+                headers: {
+                    'access-token':$scope.access_token,
+                    'uid':$scope.email,
+                    'client':$scope.client,
+                    'token-type':"Bearer",
+                    'Content-Type':'application/json'
+                },
+                data:{
+                    "completed": true
+                }
+            }
+            $http(req).then(function(res){
+                $scope.showBumps();
+                $scope.videoIndex = -1;
+                $scope.videoList.length = 0;
+                $scope.videoList = [];
+            });
     }
 
     $scope.modificarBache = function(){
@@ -296,6 +352,7 @@ angular.module('parcial1App')
             var b = $scope.bumps[i];
             //$scope.videoList.push(b.videoUrl);
             $scope.videoIndex = i;
+            
             if(b.id==id){
                 $scope.bache = b;
                 $scope.bache.videoUrl = "https://www.youtube.com/watch?v="+$scope.bache.videoUrl
@@ -326,6 +383,16 @@ angular.module('parcial1App')
     }
 
     $scope.showBachesViewModal = function(){
+        var l= 0;
+        $scope.coperadores = "";
+        for (var i = 0; i < $scope.bache.donatives.length; i++) {
+            l+=$scope.bache.donatives[i].money;
+            $scope.coperadores+=$scope.bache.donatives[i].email+" donó $"+$scope.bache.donatives[i].money+" y comento: "+$scope.bache.donatives[i].comment+", ";
+            //console.log("Dinero: "+$scope.money);
+        }
+        $scope.meta = $scope.bache.price - l;
+        
+
         $scope.dynamic.change();
         $("#viewBacheModal").modal("show");
     }
@@ -342,8 +409,22 @@ angular.module('parcial1App')
     }
 
     $scope.showBacheEditModal = function(){
-        $("#viewBacheModal").modal("hide");
-        $("#editBacheModal").modal("show");
+        if($scope.isUserBump()){
+            $("#viewBacheModal").modal("hide");
+            $("#editBacheModal").modal("show");
+        }
+    }
+
+    $scope.showCoperachaModal = function(){
+        if(!$scope.bache.completed){
+            $("#viewBacheModal").modal("hide");
+            $("#coperachaModal").modal("show");
+        }
+    }
+
+    $scope.showPayModal = function(){
+        $("#coperachaModal").modal("hide");
+        $("#payModal").modal("show");
     }
 
     /*
@@ -372,8 +453,24 @@ angular.module('parcial1App')
         }
     }
 
-    $scope.isUserBump = function(id){
-        if($scope.bache.user.email==$scope.email){
+    $scope.isUserBump = function(){
+        if($scope.bache.user.email==$scope.email && !$scope.bache.completed){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    $scope.cooperado = function(){
+        if($scope.bache.completed==true){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    $scope.enableEditAndCoop = function(){
+        if($scope.isUserBump() && $scope.cooperado()==false){
             return true;
         }else{
             return false;
@@ -387,5 +484,13 @@ angular.module('parcial1App')
         });
     },15000)*/
 
+    $scope.nuevoCalculo = function(){
+       $scope.meta = $scope.bache.price - $scope.money; 
+    }
 
-});
+
+}).filter('yesNo', function () {
+  return function (boolean) {
+    return boolean ? 'Yes' : 'No';
+  }
+})

@@ -31,7 +31,7 @@
 
 <div class="jumbotron">
   <ui-gmap-google-map refresh="true" center="bachesMapa.center" zoom="8">
-    <!--<ui-gmap-circle visible='true' clickable='true' radius='1' ng-repeat="m in mapBump track by m.id" center="m.coords" click="onClick(m.id)"></ui-gmap-marker>-->
+    <!--<ui-gmap-circle visible='true' clickable='true' radius='1' ng-repeat="m in mapBump track by m.id" center="m.coords" click="onClick(m.id)"></ui-gmap-cirle>-->
     <ui-gmap-marker ng-repeat="m in mapBump" coords="m.coords" idkey="m.id" click="searchBump(m.id)">
     
     </ui-gmap-marker>
@@ -266,18 +266,135 @@
     
 </div>
 
+<div id="coperachaModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Cooperar</h4>
+            </div>
+
+
+            <div class="modal-footer">
+                <input ng-click="showPayModal()" class="btn btn-info" value="Copera con tu tarjeta">
+            </div>
+
+            <p>{{coperadores}}</p>
+
+            <div class="modal-body">
+              <p>Dimensiones: {{bache.lengthSteps}} pasos a lo largo, por {{bache.widthSteps}} pasos a lo ancho, por {{bache.depth}}cm de profundidad</p>
+            </div>
+
+            <div class="modal-body">
+                <p>Kg de asfalto necesarios: {{bache.kg}}kg 
+                </p>
+            </div>
+
+            <div class="modal-body">
+                <p>Número de costales necesarios: {{bache.costales}}  
+                </p>
+            </div>
+
+            <div class="modal-body">
+                <p>Precio: ${{bache.price}} </p>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+<div id="payModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Tarjetazo: Faltan ${{meta}}</h4>
+            </div>
+
+            <form name="ccForm">
+              <div class="form-group">
+                <label for="card-number">Card Number</label>
+                <input type="text" class="form-control" id="cardNumber" cc-number cc-eager-type name="ccNumber" ng-model="card.number">
+              </div>
+              <table class="table">
+                <tr>
+                  <th>Valid</th>
+                  <th>Eager Type</th>
+                  <th>Type</th>
+                </tr>
+                <tr>
+                  <td>
+                    {{ccForm.ccNumber.$valid | yesNo}}
+                  </td>
+                  <td>
+                    {{ccForm.ccNumber.$ccEagerType || 'Unknown'}}
+                  </td>
+                  <td>
+                    {{ccForm.ccNumber.$ccType || 'Unknown'}}
+                  </td>
+                </tr>
+              </table>
+              <div class="form-group">
+                <label for="cvc">CVC</label>
+                <input type="text" class="form-control" id="cvc" cc-cvc cc-type="ccForm.ccNumber.$ccType" name="ccCvc" ng-model="card.cvc">
+              </div>
+              <div class="form-group">
+                <label for="card-number">Expiration</label>
+                <div class="row" cc-exp>
+                  <div class="col-xs-3">
+                    <input placeholder="MM" type="text" class="form-control" cc-exp-month name="ccExpMonth" ng-model="card.expiration.month">
+                  </div>
+                  <div class="col-xs-3">
+                    <input placeholder="YY" type="text" class="form-control" cc-exp-year name="ccExpYear" ng-model="card.expiration.year">
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="lengthSteps">¿Cuántos pesos donaras?:</label>
+                <input id="money" min="1" max="meta" type="number" class="form-control input-sm" ng-model="money" />
+              </div>
+            </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="lengthSteps">Agrega un comentario:</label>
+                <input type="text" class="form-control input-sm"/>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+                <input class="btn btn-info" ng-click="registrarCoperacha()" value="Coperacha">
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <div id="viewBacheModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Ver bache: {{bache.videoUrl}}</h4>
+                <h4 class="modal-title">Ver bache:</h4>
             </div>
+
+            <h4 ng-show="bache.completed">El bache ya fue arreglado</h4>
 
             <div class="modal-footer">
                 <input ng-show="isUserBump()" ng-click="showBacheEditModal()" class="btn btn-info" value="Modificar bache">
             </div>
+
+            <div class="modal-footer">
+                <input ng-show="!bache.completed" ng-click="showCoperachaModal()" class="btn btn-info" value="Coperacha">
+            </div>
+
+
+
 
             <div class="embed-responsive embed-responsive-16by9">
             <youtube-video class="embed-responsive-item" video-id="dynamic.video"></youtube-video>
