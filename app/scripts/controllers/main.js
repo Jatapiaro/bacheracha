@@ -245,6 +245,7 @@ angular.module('parcial1App')
         if(l+$scope.money>=$scope.bache.price){
             $scope.modificarBache2();
         }
+        $scope.showBumps();
         $("#payModal").modal("hide");
     }
 
