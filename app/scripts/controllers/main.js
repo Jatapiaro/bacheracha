@@ -66,6 +66,7 @@ angular.module('parcial1App')
     *Variables de registro baches
     */
     $scope.erroresBache=[];
+    $scope.errorEdit = "";
     $scope.latitude=-1;
     $scope.longitude=-1;
     $scope.widthSteps=1;
@@ -78,7 +79,7 @@ angular.module('parcial1App')
     /*
     *Show bache
     */
-    $scope.bache;
+    $scope.bache = null;
 
 
     $scope.login = function(){
@@ -115,6 +116,7 @@ angular.module('parcial1App')
                 console.log($scope.logeado);
                 $scope.password = "";
                 $scope.passwordConfirmation = "";
+                $scope.showBumps();
             });
         }
     }
@@ -155,6 +157,10 @@ angular.module('parcial1App')
             console.log(res.data);
             $scope.bumps = res.data;
             for (var i = 0; i < $scope.bumps.length; i++) {
+
+                var b = $scope.bumps[i];
+                $scope.videoList.push(b.videoUrl);
+
                 var c = {
                     latitude: $scope.bumps[i].latitude,
                     longitude: $scope.bumps[i].longitude,
@@ -209,6 +215,37 @@ angular.module('parcial1App')
         });
     }
 
+    $scope.modificarBache = function(){
+        if($scope.bache.videoUrl==""){
+            $scope.errorEdit = "El video no puede ser nulo";
+        }else{
+            $scope.errorEdit = "";
+            $scope.bache.videoUrl = $scope.bache.videoUrl.replace("https://www.youtube.com/watch?v=", ""); 
+            var req = {
+                method: 'PUT',
+                url: 'http://localhost:3000/bumps/'+$scope.bache.id+'.json',
+                headers: {
+                    'access-token':$scope.access_token,
+                    'uid':$scope.email,
+                    'client':$scope.client,
+                    'token-type':"Bearer",
+                    'Content-Type':'application/json'
+                },
+                data:{
+                    "videoUrl": $scope.bache.videoUrl
+                }
+            }
+            $http(req).then(function(res){
+                console.log("Mod data: "+res.data);
+                $("#editBacheModal").modal("hide");
+                $scope.showBumps();
+                $scope.videoIndex = -1;
+                $scope.videoList.length = 0;
+                $scope.videoList = [];
+            });
+        }
+    }
+
     $scope.procedToRegistro = function(){
         $scope.erroresRegistro.length = 0;
         $scope.erroresRegistro = [];
@@ -257,17 +294,20 @@ angular.module('parcial1App')
     $scope.searchBump = function(id){
         for(var i = 0; i < $scope.bumps.length; i++) {
             var b = $scope.bumps[i];
-            $scope.videoList.push(b.videoUrl);
+            //$scope.videoList.push(b.videoUrl);
             $scope.videoIndex = i;
             if(b.id==id){
                 $scope.bache = b;
+                $scope.bache.videoUrl = "https://www.youtube.com/watch?v="+$scope.bache.videoUrl
                 console.log(b.videoUrl);
-                $scope.url = b.videoUrl;
+                //$scope.url = b.videoUrl;
                 break;
             }
         }
         $scope.showBachesViewModal();
     }
+
+
 
     /*
     * Show modals methods
@@ -301,6 +341,11 @@ angular.module('parcial1App')
         $("#newBacheModal").modal("show");
     }
 
+    $scope.showBacheEditModal = function(){
+        $("#viewBacheModal").modal("hide");
+        $("#editBacheModal").modal("show");
+    }
+
     /*
     * Calculos
     */
@@ -321,6 +366,14 @@ angular.module('parcial1App')
 
     $scope.prueba = function(id){
         if(id==$scope.bache.id){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    $scope.isUserBump = function(id){
+        if($scope.bache.user.email==$scope.email){
             return true;
         }else{
             return false;

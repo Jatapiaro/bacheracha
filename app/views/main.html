@@ -1,3 +1,34 @@
+    <div class="header">
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand" href="#/">Bacheracha</a>
+          </div>
+
+          <div class="collapse navbar-collapse" id="js-navbar-collapse">
+
+            <ul class="nav navbar-nav">
+
+              <li><input class="btn btn-info" readonly="true" ng-show="!logeado" value="Login" ng-click="showLoginModal()"></input></li>
+
+              <li class="active"><input class="btn btn-info" readonly="true" ng-show="!logeado" value="Registrarse" ng-click="showRegisterModal()"></input></li>
+
+              <li><input class="btn btn-info" readonly="true" ng-show="logeado" value="Registra un bache" ng-click="showNewBacheModal()"></input></li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
 <div class="jumbotron">
   <ui-gmap-google-map refresh="true" center="bachesMapa.center" zoom="8">
     <!--<ui-gmap-circle visible='true' clickable='true' radius='1' ng-repeat="m in mapBump track by m.id" center="m.coords" click="onClick(m.id)"></ui-gmap-marker>-->
@@ -9,14 +40,6 @@
 </div>
 
 
-
-
-
-
-<input class="btn btn-info" ng-show="!logeado" value="Registrarse" ng-click="showRegisterModal()"></input>
-<input class="btn btn-info" ng-show="!logeado" value="Login" ng-click="showLoginModal()"></input>
-
-<input class="btn btn-info" ng-show="logeado" value="Registra un bache" ng-click="showNewBacheModal()"></input>
 
 
 
@@ -122,6 +145,7 @@
 </div>
 
 <div id="newBacheModal" class="modal fade">
+
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -192,6 +216,54 @@
             </div>
         </div>
     </div>
+
+</div>
+
+
+<div id="editBacheModal" class="modal fade">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Editar bache</h4>
+            </div>
+
+            <h4 style="color:#ff6666">{{errorEdit}}</h4>
+          
+            <div class="modal-body">
+              <p>Dimensiones: {{bache.lengthSteps}} pasos a lo largo, por {{bache.widthSteps}} pasos a lo ancho, por {{bache.depth}}cm de profundidad</p>
+            </div>
+
+            <div class="modal-body">
+                <p>Kg de asfalto necesarios: {{bache.kg}}kg 
+                </p>
+            </div>
+
+            <div class="modal-body">
+                <p>Número de costales necesarios: {{bache.costales}}  
+                </p>
+            </div>
+
+            <div class="modal-body">
+                <p>Precio: ${{bache.price}}  
+                </p>
+            </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="url">URL de tu video:  
+                </label>
+                <input id="url" type="text" class="form-control input-sm" ng-model="bache.videoUrl"/>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+                <input class="btn btn-info" value="Modificar bache" ng-click="modificarBache()">
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 
@@ -202,6 +274,11 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Ver bache: {{bache.videoUrl}}</h4>
             </div>
+
+            <div class="modal-footer">
+                <input ng-show="isUserBump()" ng-click="showBacheEditModal()" class="btn btn-info" value="Modificar bache">
+            </div>
+
             <div class="embed-responsive embed-responsive-16by9">
             <youtube-video class="embed-responsive-item" video-id="dynamic.video"></youtube-video>
             </div>
